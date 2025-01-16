@@ -25,8 +25,8 @@ process.on('SIGINT', () => process.exit());
 
 process.on('exit', () => {
   if (isInputEmpty) {
-    stdout.write('no data to save');
+    stdout.write('\nno data to save');
   } else {
-    stdout.write(`text saved in ${fileName}`);
+    stdout.write(`\ntext saved in ${fileName}`);
   }
 });
