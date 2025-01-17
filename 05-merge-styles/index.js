@@ -1,45 +1,25 @@
 const fs = require('fs');
 const path = require('path');
 const folderWithStyles = path.join(__dirname, 'styles');
-const pathToBundlerFile = '05-merge-styles/project-dist/bundle.css';
+const pathToBundlerFile = path.join(__dirname, 'project-dist', 'bundle.css');
+const mergedStyles = fs.createWriteStream(pathToBundlerFile);
 
-fs.readdir(folderWithStyles, (err, files) => {
-  fs.unlink(pathToBundlerFile, () => {});
-  if (err) console.log(err);
-  let cssFiles = cssFilesFilter(files);
-  console.log(cssFiles);
-});
-
-function copyStylesToBundle(path, data) {
-  fs.writeFile(path, data, { flag: 'a+' }, (err) => {
-    if (err) {
-      console.log(err);
-    }
-  });
-}
-
-function readFiles(pathToFolder, file) {
-  fs.readFile(
-    path.join(pathToFolder, file),
-    { encoding: 'utf-8' },
-    (err, data) => {
-      if (err) {
-        console.log('error');
-      } else {
-        copyStylesToBundle(pathToBundlerFile, data);
-      }
-    },
-  );
-}
-
-function cssFilesFilter(array) {
-  let filtered = array.filter((item) => path.extname(item) === '.css');
-  filtered.forEach((file) => {
-    fs.stat(path.join(folderWithStyles, file), (err, stats) => {
-      if (err) console.log(err);
-      if (stats.isFile()) {
-        readFiles(folderWithStyles, file);
+function merge() {
+  fs.readdir(folderWithStyles, (err, files) => {
+    if (err) console.log(err);
+    files.forEach((file) => {
+      const pathToFile = path.join(folderWithStyles, file);
+      if (path.extname(file) === '.css') {
+        fs.stat(path.join(folderWithStyles, file), (err, stats) => {
+          if (err) console.log(err);
+          if (stats.isFile()) {
+            const styles = fs.createReadStream(pathToFile, 'utf-8');
+            styles.on('data', (dataChunk) => mergedStyles.write(dataChunk));
+          }
+        });
       }
     });
   });
 }
+
+merge();
