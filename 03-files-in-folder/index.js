@@ -1,5 +1,3 @@
-// 03-files-in-folder/secret-folder
-// <file name>-<file extension>-<file size></file>
 const fs = require('fs');
 const path = require('path');
 const folderName = 'secret-folder';
@@ -16,7 +14,9 @@ fs.readdir(folderPath, (err, files) => {
       }
       if (!stats.isDirectory()) {
         console.log(
-          `${path.basename(file, path.extname(file))} - ${path.extname(file).slice(1)} - ${stats.size} bytes`,
+          `${path.basename(file, path.extname(file))} - ${path
+            .extname(file)
+            .slice(1)} - ${stats.size} bytes`,
         );
       }
     });
