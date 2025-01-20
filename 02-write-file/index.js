@@ -5,6 +5,12 @@ const welcomeMessage = 'enter text\n';
 const os = require('node:os');
 let isInputEmpty = true;
 
+fs.writeFile(`02-write-file/${fileName}`, '', { flag: 'a+' }, (err) => {
+  if (err) {
+    stdout.write(`error: ${err}`);
+  }
+});
+
 stdout.write(welcomeMessage);
 
 stdin.on('data', (data) => {
