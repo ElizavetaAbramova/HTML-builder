@@ -57,14 +57,16 @@ function readFileWithFS(file) {
 function readDirectory(folder, data) {
   fs.readdir(folder, {withFileTypes: true}, (err, files) => {
     if (err) console.log(err);
-    files.forEach(async (file) => {
+    files.forEach((file) => {
       const pathToFile = path.join(componentsFolder, file.name);
 
       if (path.extname(pathToFile) === '.html') {
-        const fileContent = await fsPromise.readFile(pathToFile, 'utf-8', (err) => err);
         const fileName = file.name.slice(0, file.name.indexOf('.'));
-        data = data.replaceAll(`{{${fileName}}}`, fileContent);
-        await fsPromise.writeFile(indexFile, data);
+        fs.readFile(pathToFile, 'utf-8', (err, content) => {
+          if (err) console.log(err);
+          data = data.replaceAll(`{{${fileName}}}`, content);
+          fs.writeFile(indexFile, data, (err) => err);
+        });
       }
     });
   });
