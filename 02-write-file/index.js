@@ -1,11 +1,12 @@
 const fs = require('fs');
+const path = require('path');
 const { stdin, stdout } = process;
 const fileName = 'text-file.txt';
 const welcomeMessage = 'enter text\n';
 const os = require('node:os');
 let isInputEmpty = true;
 
-fs.writeFile(`02-write-file/${fileName}`, '', { flag: 'a+' }, (err) => {
+fs.writeFile(path.join(__dirname, fileName), '', { flag: 'a+' }, (err) => {
   if (err) {
     stdout.write(`error: ${err}`);
   }
